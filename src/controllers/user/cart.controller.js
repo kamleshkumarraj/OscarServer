@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
 import { Cards } from "../../models/card.model";
 import { Carts } from "../../models/cart.model";
@@ -118,4 +119,37 @@ export const getMyCart = asyncHandler(async (req, res, next) => {
     message: "Cart fetched successfully.",
     data: cartList,
   })
+});
+
+export const updateQty = asyncHandler(async (req,res,next) => {
+    const {cartId, quantity} = req.body;
+    if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for updating quantity !",404))
+    await Carts.updateOne({_id : cartId}, {$set : {quantity}});
+
+    res.status(200).json({
+        success : true,
+        message : "Quantity updated successfully !"
+    })
+})
+
+export const increaseCartQty = asyncHandler(async (req, res, next) => {
+    const {cartId} = req.params;
+    if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for increasing quantity !",404))
+    await Carts.updateOne({_id : cartId}, {$inc : {quantity : 1}});
+
+    res.status(200).json({
+        success : true,
+        message : "Quantity increased successfully !"
+    })
+});
+
+export const decreaseCartQty = asyncHandler(async (req, res, next) => {
+    const {cartId} = req.params;
+    if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for decreasing quantity !",404))
+    await Carts.updateOne({_id : cartId}, {$inc : {quantity : -1}});
+
+    res.status(200).json({
+        success : true,
+        message : "Quantity decreased successfully !"
+    })
 });
