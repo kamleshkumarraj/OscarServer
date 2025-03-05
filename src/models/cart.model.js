@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const cartSchema = new mongoose.Schema({
     card : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "card"
+        ref : "Card"
     },
     price : {
         type : Number,
@@ -13,4 +13,6 @@ const cartSchema = new mongoose.Schema({
         type : Number,
         required : true
     }
-})
+}, {timestamps : true});
+
+const Carts = mongoose.model("Cart", cartSchema);

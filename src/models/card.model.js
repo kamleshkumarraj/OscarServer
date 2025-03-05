@@ -5,9 +5,9 @@ const CardSchema = new mongoose.Schema({
     image : {type : String , required : true },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref : "user"
+        ref : "User"
      },
     title : {type : String , required : true}
 },{timestamps : true});
 
-export const Card = mongoose.model("card", CardSchema);
+export const Cards = mongoose.model("Card", CardSchema);
