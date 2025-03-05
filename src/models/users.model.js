@@ -84,4 +84,4 @@ userSchema.methods.generateUserDeleteToken = function(){
     this.userDeleteExpiry = Date.now() + 5*60*1000;
     return resetToken
 }
-export const Users = mongoose.model("user",userSchema);
+export const Users = mongoose.model("User",userSchema);
