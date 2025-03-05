@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
-import { Cards } from "../../models/card.model";
+import { Cards } from "../../models/card.model.js";
 import { ErrorHandler } from "../../errors/errorHandler.error.js";
 
 export const createNewDesign = asyncHandler(async (req, res, next) => {
