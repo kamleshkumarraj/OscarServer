@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
-import { Cards } from "../../models/card.model";
 import { Carts } from "../../models/cart.model";
 
 export const createCart = asyncHandler(async (req, res, next) => {
