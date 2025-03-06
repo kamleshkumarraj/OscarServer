@@ -12,6 +12,10 @@ const cartSchema = new mongoose.Schema({
     quantity : {
         type : Number,
         required : true
+    },
+    cardDetails : {
+        type : Object,
+        required : true
     }
 }, {timestamps : true});
 
