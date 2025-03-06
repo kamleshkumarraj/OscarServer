@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { isLoggedIn } from "../../middlewares/user/auth.middleware.js";
 import { upload } from "../../middlewares/user/fileUpload.middleware.js";
-import { createNewDesign, deleteCard, getMyCard, updateCard } from "../../controllers/user/card.controller";
+import { createNewDesign, deleteCard, getMyCard, updateCard } from "../../controllers/user/card.controller.js";
 
 export const cardRouter = Router();
 

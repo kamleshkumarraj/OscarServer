@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isLoggedIn } from "../../middlewares/user/auth.middleware.js";
-import { createCart, decreaseCartQty, getMyCart, increaseCartQty, removeItem, removeMultipleCart, updateQty } from "../../controllers/user/cart.controller";
+import { createCart, decreaseCartQty, getMyCart, increaseCartQty, removeItem, removeMultipleCart, updateQty } from "../../controllers/user/cart.controller.js";
 
 export const cartRouter = Router();
 

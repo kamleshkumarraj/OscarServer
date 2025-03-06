@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
-import { Wishlists } from "../../models/wishlist.model";
+import { Wishlists } from "../../models/wishlist.model.js";
 
 export const createWishlist = asyncHandler(async (req, res, next) => {
   const { cardId } = req.body;
