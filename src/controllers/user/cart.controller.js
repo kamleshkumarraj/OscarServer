@@ -153,3 +153,15 @@ export const decreaseCartQty = asyncHandler(async (req, res, next) => {
         message : "Quantity decreased successfully !"
     })
 });
+
+export const removeMultipleCart = asyncHandler(async (req, res, next) => {
+  const cartId = req.body || [];
+
+  if(cartId.length == 0) return next(new ErrorHandler("please send card id !",404))
+  await Carts.deleteMany({ _id: { $in: cartId } });
+
+  res.status(200).json({
+    success: true,
+    message: "Remove design from cart list successfully.",
+  })
+})
