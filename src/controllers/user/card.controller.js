@@ -2,10 +2,20 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
 import { Cards } from "../../models/card.model.js";
 import { ErrorHandler } from "../../errors/errorHandler.error.js";
+import { uploadOnCloudinary } from "../../utils/cloudinary.utils.js";
 
 export const createNewDesign = asyncHandler(async (req, res, next) => {
     const cardData = req.body;
-    await Cards.create({...cardData, userId: req.user.id});
+    const image = req.file.path;
+    if(!image) return next(new ErrorHandler("Please send image", 400));
+
+    const {success, data} = await uploadOnCloudinary([image]);
+    if(!success) return next(new ErrorHandler(data, 400));
+
+    const public_id = data[0].public_id;
+    const url = data[0].url;
+
+    await Cards.create({...cardData, userId: req.user.id, image : {public_id, url}});
 
     res.status(200).json({
         success : true,
