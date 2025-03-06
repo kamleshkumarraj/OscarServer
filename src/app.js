@@ -4,6 +4,7 @@ import express from 'express';
 import { upload } from './middlewares/user/fileUpload.middleware.js';
 import { authRouter } from './routes/user/auth.routes.js';
 import { profileRouter } from './routes/user/profile.routes.js';
+import { cardRouter } from './routes/user/card.routes.js';
 
 export const app = express();
 
@@ -27,6 +28,10 @@ app.use("/api/v1/user/auth", authRouter);
 
 // now we define routes for handling the profile for a user.
 app.use("/api/v1/user/profile", profileRouter);
+
+//now we define routes for handling the card for a user.
+app.use("/api/v1/user/card",cardRouter);
+
 app.use((err, req, res, next) => {
     const message = err.message || "Something went wrong"
     const status = err.status || 500
