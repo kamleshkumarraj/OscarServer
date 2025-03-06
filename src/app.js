@@ -1,10 +1,10 @@
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
-import { upload } from './middlewares/user/fileUpload.middleware.js';
 import { authRouter } from './routes/user/auth.routes.js';
-import { profileRouter } from './routes/user/profile.routes.js';
 import { cardRouter } from './routes/user/card.routes.js';
+import { cartRouter } from './routes/user/cart.routes.js';
+import { profileRouter } from './routes/user/profile.routes.js';
 
 export const app = express();
 
@@ -31,6 +31,10 @@ app.use("/api/v1/user/profile", profileRouter);
 
 //now we define routes for handling the card for a user.
 app.use("/api/v1/user/card",cardRouter);
+
+// now we define routes for handling the cart for a user.
+app.use("/api/v1/user/cart", cartRouter);
+
 
 app.use((err, req, res, next) => {
     const message = err.message || "Something went wrong"

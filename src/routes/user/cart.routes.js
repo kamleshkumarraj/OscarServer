@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isLoggedIn } from "../../middlewares/user/auth.middleware.js";
-import { createCart, decreaseCartQty, getMyCart, increaseCartQty, removeItem, updateQty } from "../../controllers/user/cart.controller";
+import { createCart, decreaseCartQty, getMyCart, increaseCartQty, removeItem, removeMultipleCart, updateQty } from "../../controllers/user/cart.controller";
 
 export const cartRouter = Router();
 
@@ -12,4 +12,4 @@ cartRouter.route("/increase/:id").patch(increaseCartQty);
 cartRouter.route("/decrease/:id").patch(decreaseCartQty);
 cartRouter.route("/remove/:id").delete(removeItem);
 cartRouter.route("/my-carts").get(getMyCart);
-cartRouter.route("/remove-multiple").delete();
+cartRouter.route("/remove-multiple").delete(removeMultipleCart);
