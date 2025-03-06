@@ -121,7 +121,8 @@ export const getMyCart = asyncHandler(async (req, res, next) => {
 });
 
 export const updateQty = asyncHandler(async (req,res,next) => {
-    const {cartId, quantity} = req.body;
+    const {quantity} = req.body;
+    const cartId = req.params.id;
     if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for updating quantity !",404))
     await Carts.updateOne({_id : cartId}, {$set : {quantity}});
 
@@ -132,7 +133,7 @@ export const updateQty = asyncHandler(async (req,res,next) => {
 })
 
 export const increaseCartQty = asyncHandler(async (req, res, next) => {
-    const {cartId} = req.params;
+    const cartId = req.params.id;
     if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for increasing quantity !",404))
     await Carts.updateOne({_id : cartId}, {$inc : {quantity : 1}});
 
@@ -143,7 +144,7 @@ export const increaseCartQty = asyncHandler(async (req, res, next) => {
 });
 
 export const decreaseCartQty = asyncHandler(async (req, res, next) => {
-    const {cartId} = req.params;
+    const cartId = req.params.id;
     if(! mongoose.isValidObjectId(cartId)) return next(new ErrorHandler("Please send valid cart id for decreasing quantity !",404))
     await Carts.updateOne({_id : cartId}, {$inc : {quantity : -1}});
 
