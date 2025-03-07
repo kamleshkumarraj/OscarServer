@@ -5,6 +5,7 @@ import { authRouter } from './routes/user/auth.routes.js';
 import { cardRouter } from './routes/user/card.routes.js';
 import { cartRouter } from './routes/user/cart.routes.js';
 import { profileRouter } from './routes/user/profile.routes.js';
+import { wishlistRouter } from './routes/user/wishlist.routes.js';
 
 export const app = express();
 
@@ -35,6 +36,8 @@ app.use("/api/v1/user/card",cardRouter);
 // now we define routes for handling the cart for a user.
 app.use("/api/v1/user/cart", cartRouter);
 
+// now we define routes for handling the wishlist for a user.
+app.use("/api/v1/user/wishlist", wishlistRouter);
 
 app.use((err, req, res, next) => {
     const message = err.message || "Something went wrong"
