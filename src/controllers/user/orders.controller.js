@@ -6,6 +6,7 @@ import { ordersModel } from '../../models/order.model.js';
 import { productsModel } from '../../models/products.model.js';
 import crypto from 'crypto';
 
+// create order for cash on deliver
 export const createOrder = asyncHandler(async (req, res, next) => {
   const { orderItems } = req.body;
   req.body.user = req.user.id;
@@ -28,13 +29,16 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   });
 });
 
+// create order for online payment using card or upi.
 export const checkout = asyncHandler(async (req, res, next) => {
   const order = req.body;
 
+  // we get all products from products models for get their price
   const orderItemId = order.orderItems.map(
     (order) => new mongoose.Types.ObjectId(order.productId),
   );
 
+  // now we calculate the total price of all products
   const amount = await productsModel.aggregate([
     { $match: { _id: { $in: orderItemId } } },
     {
@@ -45,11 +49,13 @@ export const checkout = asyncHandler(async (req, res, next) => {
     },
   ]).lean();
 
+  // now we calculate the total price
   const price = amount.reduce((acc, { price }, idx) => {
     acc += price * order?.orderItems[idx]?.quantity;
     return acc;
   }, 0);
 
+  // now we calculate the tax and total price
   const taxPrice = price * 0.018;
   const totalPrice = price + taxPrice;
 
@@ -57,9 +63,13 @@ export const checkout = asyncHandler(async (req, res, next) => {
     amount: Math.round(totalPrice) * 100,
     currency: 'INR',
   };
+
+  // create instance for razorpay.
   const instance = await createRazorInstance();
+  // send request on razorpay server for creating the order on razorpay.
   const response = await instance.orders.create(options);
 
+  // then send the response to client for verify the order that is provide by razorpay and also save the details in our database.
   if (response.status == 'created') {
     await ordersModel.create({
       ...order,
@@ -80,6 +90,7 @@ export const checkout = asyncHandler(async (req, res, next) => {
   }
 });
 
+// we have to need the api key for razorpay on client side the we provide them from server.
 export const getRazorAPIKey = asyncHandler(async (req, res, next) => {
   const RAZOR_API_KEY = process.env.RAZOR_API_KEY;
   return res.status(200).json({
@@ -89,8 +100,10 @@ export const getRazorAPIKey = asyncHandler(async (req, res, next) => {
   });
 });
 
+// now we verify the order that is provide by razorpay
 export const verifyOrder = asyncHandler(async (req, res, next) => {
 
+// that requests is send from client side that is provide by razorpay
   const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
     req.body;
   console.log(razorpay_order_id)
@@ -102,6 +115,7 @@ export const verifyOrder = asyncHandler(async (req, res, next) => {
     .update(sign)
     .digest('hex');
 
+    // if every thing is okk then we update the order that is provide by razorpay
   if (generated_signature == razorpay_signature) {
     await ordersModel.updateOne({
       paymentInfo : {razorpay_order_id : razorpay_order_id},
