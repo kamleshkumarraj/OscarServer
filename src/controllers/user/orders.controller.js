@@ -43,7 +43,7 @@ export const checkout = asyncHandler(async (req, res, next) => {
         price: 1,
       },
     },
-  ]);
+  ]).lean();
 
   const price = amount.reduce((acc, { price }, idx) => {
     acc += price * order?.orderItems[idx]?.quantity;
@@ -125,3 +125,21 @@ export const verifyOrder = asyncHandler(async (req, res, next) => {
 
   
 });
+
+// we write controller for get single order.
+
+export const getSingleOrder = asyncHandler(async (req , res , next) => {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id))
+    return next(new ErrorHandler("Please send valid order id : ",402))
+
+    const order = await ordersModel.findById(req.params.id).populate("user","firstname email")
+
+    if(!order) return next(new ErrorHandler("Please send valid order id : ",402))
+
+    res.status(200).json({
+        success : true,
+        message : "You get your order successfully",
+        data : order
+    })
+
+})
