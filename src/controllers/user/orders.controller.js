@@ -143,3 +143,53 @@ export const getSingleOrder = asyncHandler(async (req , res , next) => {
     })
 
 })
+
+// we write controller for get all orders
+
+export const getAllOrders = asyncHandler(async (req , res , next) =>{
+    const orders = await ordersModel.find({user : req.user.id});
+
+    if(!orders) return next(new ErrorHandler("You have no any orders records !",403))
+
+    let totalAmount = 0;
+    orders.forEach((order) => {
+        totalAmount += order.totalPrice;
+    })
+
+    res.status(200).json({
+        success : true,
+        message : "You get all orders successfully .",
+        data : orders,
+        totalAmount
+    })
+})
+
+// we write controller for delete single order
+
+export const deleteSingleOrder = asyncHandler(async (req , res , next) => {
+
+    const deletedOrder = await ordersModel.findById(req.params.id)
+
+    if(!deletedOrder) return next(new ErrorHandler("please send valid order id",402))
+
+    if(deletedOrder.orderStatus == 'Delivered') return next(new ErrorHandler("Product already delivered",403))
+
+    const updateProducts = async (deletedOrder) =>{ 
+        const product = await productsModel.findById(deletedOrder.productId)
+        product.stock += Number(deletedOrder.quantity);
+
+        await product.save({validateBeforeSave : false})
+    } 
+
+     deletedOrder.orderItems.forEach(async (order) => {
+        await updateProducts(order)
+    
+    })
+
+    await ordersModel.findByIdAndDelete(req.params.id)
+
+    res.status(200).json({
+        success : true,
+        message : "You deleted product successfully"
+    })
+})
