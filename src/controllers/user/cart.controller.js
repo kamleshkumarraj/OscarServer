@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { asyncHandler } from "../../errors/asyncHandler.error.js";
-import { Carts } from "../../models/cart.model";
+import { Carts } from "../../models/cart.model.js";
 
 export const createCart = asyncHandler(async (req, res, next) => {
   const { cardId, quantity, price } = req.body;
